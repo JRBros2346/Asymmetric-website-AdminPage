@@ -3,23 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Simple Vlang Web Page</title>
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
     <header>
-        <h1>Admin Login</h1>
+        <h1>log in  Vlang Web App</h1>
     </header>
     <main>
-        <form id="login-form" method="POST" action="/api/login">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">Login</button>
-        </form>
+        <p id="greeting">Hello, Visitor!</p>
+        <button onclick="updateGreeting()">Click Me</button>
     </main>
+    <footer>
+        <p>&copy; 2024 My Web App</p>
+    </footer>
+    <script src="/assets/scripts.js"></script>
 </body>
 </html>

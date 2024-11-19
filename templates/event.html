@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Management</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <title>Simple Vlang Web Page</title>
+    <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
     <header>
-        <h1>Manage Events</h1>
-        <nav>
-            <a href="/">Dashboard</a>
-        </nav>
+        <h1>event</h1>
     </header>
     <main>
-        <h2>Event List</h2>
-        <ul id="event-list"></ul>
+        <p id="greeting">Hello, Visitor!</p>
+        <button onclick="updateGreeting()">Click Me</button>
     </main>
+    <footer>
+        <p>&copy; 2024 My Web App</p>
+    </footer>
+    <script src="/assets/scripts.js"></script>
 </body>
 </html>
