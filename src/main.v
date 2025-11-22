@@ -1,39 +1,84 @@
-module main
-
 import vweb
-import databases
-import os
-
-const port = 8082
 
 struct App {
-	vweb.Context
-}
-
-pub fn (app App) before_request() {
-	println('[web] before_request: ${app.req.method} ${app.req.url}')
+    vweb.Context
+    middlewares map[string][]vweb.Middleware
 }
 
 fn main() {
-	mut db := databases.create_db_connection() or { panic(err) }
-
-	sql db {
-		create table User
-		create table Product
-	} or { panic('error on create table: ${err}') }
-
-	db.close() or { panic(err) }
-
-	mut app := &App{}
-	app.serve_static('/favicon.ico', 'src/assets/favicon.ico')
-	// makes all static files available.
-	app.mount_static_folder_at(os.resource_abs_path('.'), '/')
-
-	vweb.run(app, port)
+	mut app := &App {
+		middlewares: {
+            // chaining is allowed, middleware will be evaluated in order
+            '/path/to/': [middleware_func, other_func]
+            '/':         [global_middleware]
+        }
+	} 
+    vweb.run(app, 7000)
 }
 
-pub fn (mut app App) index() vweb.Result {
-	title := 'vweb app'
+fn middleware_func(mut ctx vweb.Context) bool {
+    // ...
+    return true
+}
 
-	return $vweb.html()
+fn other_func(mut ctx vweb.Context) bool {
+    // ...
+    return true
+}
+
+fn global_middleware(mut ctx vweb.Context) bool {
+    // ...
+    return true
+}
+
+fn (mut app App) hello() vweb.Result {
+    return app.text('Hello')
+}
+
+@['/foo']
+fn (mut app App) world() vweb.Result {
+    return app.text('World')
+}
+
+@[post]
+fn (mut app App) hehe() vweb.Result {
+    return app.text('Haha')
+}
+
+@['/product/create'; post]
+fn (mut app App) create_product() vweb.Result {
+    return app.text('product')
+}
+
+
+@['/hello/:user']
+fn (mut app App) hello_user(user string) vweb.Result {
+    return app.text('Hello $user')
+}
+
+@['/user'; get]
+pub fn (mut app App) controller_get_user_by_id() vweb.Result {
+    // http://localhost:3000/user?q=vpm&order_by=desc => { 'q': 'vpm', 'order_by': 'desc' }
+    return app.text(app.query.str())
+}
+
+@['/'; host: 'example.com']
+pub fn (mut app App) hello_web() vweb.Result {
+    return app.text('Hello World')
+}
+
+@['/'; host: 'api.example.org']
+pub fn (mut app App) hello_api() vweb.Result {
+    return app.text('Hello API')
+}
+
+// define the handler without a host attribute last if you have conflicting paths.
+@['/']
+pub fn (mut app App) hello_others() vweb.Result {
+    return app.text('Hello Others')
+}
+
+@['/demo/:path...']
+fn (mut app App) wildcard(path string) vweb.Result {
+    return app.text('URL path = "${path}"')
 }
